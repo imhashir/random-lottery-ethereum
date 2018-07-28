@@ -88,4 +88,18 @@ describe('Contract Test', () => {
 		}
 	})
 	
+
+	it('Checking if price is won by winner', async () => {
+		await lottery.methods.enter().send({
+			from: fetchedAccounts[1], 
+			value: web3.utils.toWei('2', 'ether')
+		});
+
+		const initialBalance = await web3.eth.getBalance(fetchedAccounts[1]);
+		await lottery.methods.pickWinner().send({ from: fetchedAccounts[0] });
+		const newBalance = await web3.eth.getBalance(fetchedAccounts[1]);
+		const diff = newBalance - initialBalance;
+
+		assert(diff > web3.utils.toWei('1.8', 'ether'));
+	})
 })
