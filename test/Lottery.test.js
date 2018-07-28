@@ -43,7 +43,7 @@ describe('Contract Test', () => {
 		assert.equal(players[0], fetchedAccounts[1]);
 	})
 
-	it('Taking part and Choosing Winner', async () => {
+	it('Taking part and Choosing Winner by Manager', async () => {
 		await lottery.methods.enter().send({
 			from: fetchedAccounts[1], 
 			value: web3.utils.toWei('0.1', 'ether')
@@ -63,6 +63,17 @@ describe('Contract Test', () => {
 		});
 
 		assert.equal(participants.length, 0);
+	})
+
+	it('Pick Winner by someone other than Manager', async () => {
+		try {
+			await lottery.methods.pickWinner().send({
+				from: fetchedAccounts[1]
+			});
+			assert(false);
+		} catch (err) {
+			assert(err);
+		}
 	})
 
 	it('Fails on less than required ETH', async () => {
